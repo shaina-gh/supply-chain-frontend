@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-
 import {
   BarChart,
   Bar,
@@ -17,105 +14,78 @@ import {
   Cell,
 } from "recharts";
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
-
-import KpiCards from "./KpiCards"; // Import the KPI component
-import LocationMap from "./LocationMap"; // Import the Map component
+import LocationMap from "./LocationMap";
 import "./Dashboard.css";
 
 const COLORS = ["#FFBB28", "#00C49F", "#0088FE", "#FF8042"];
+const RENDER_API_URL = "https://supply-chain-backend-mf8h.onrender.com"; // <-- REPLACE WITH YOUR RENDER URL
 
 const Dashboard = () => {
-  // --- All state hooks must be inside the component ---
   const [barChartData, setBarChartData] = useState([]);
   const [pieChartData, setPieChartData] = useState([]);
   const [assetList, setAssetList] = useState([]);
   const [selectedAsset, setSelectedAsset] = useState("");
-  const [startDate, setStartDate] = useState(null); // Date picker state
-  const [endDate, setEndDate] = useState(null); // Date picker state
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchStaticData = async () => {
       try {
-        // --- Pass dates and asset filter to the API calls ---
-        const params = {
-          asset: selectedAsset || "All",
-          startDate: startDate ? startDate.toISOString() : null,
-          endDate: endDate ? endDate.toISOString() : null,
-        };
-
         const [assetListResponse, pieResponse] = await Promise.all([
-          axios.get("http://localhost:5000/api/logistics", { params }),
-          axios.get("http://localhost:5000/api/delay-reasons", { params }),
+          axios.get(`${RENDER_API_URL}/api/logistics?asset=All`),
+          axios.get(`${RENDER_API_URL}/api/delay-reasons`),
         ]);
 
-        // Only update the asset list on the initial load to prevent it from changing
-        if (assetList.length === 0) {
-          const uniqueAssets = [
-            ...new Set(assetListResponse.data.map((item) => item.asset_id)),
-          ];
-          setAssetList(uniqueAssets);
-        }
-
-        setBarChartData(assetListResponse.data);
+        const uniqueAssets = [
+          ...new Set(assetListResponse.data.map((item) => item.asset_id)),
+        ];
+        setAssetList(uniqueAssets);
         setPieChartData(pieResponse.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching static data:", error);
       }
     };
-    fetchData();
-    // Re-fetch data whenever a filter changes
-  }, [selectedAsset, startDate, endDate]);
+    fetchStaticData();
+  }, []);
+
+  useEffect(() => {
+    const fetchBarData = async () => {
+      const assetFilter = selectedAsset || "All";
+      const endpoint = `$https://supply-chain-backend-mf8h.onrender.com/api/logistics?asset=${assetFilter}`;
+      try {
+        const response = await axios.get(endpoint);
+        setBarChartData(response.data);
+      } catch (error) {
+        console.error("Error fetching bar chart data:", error);
+      }
+    };
+    fetchBarData();
+  }, [selectedAsset]);
 
   return (
     <div className="dashboard-container">
       <h1>Supply Chain Dashboard</h1>
-
-      {/* --- KPI CARDS --- */}
-      <KpiCards />
-
-      {/* --- FILTER CONTROLS WRAPPER --- */}
-      <div className="filter-controls">
-        <FormControl size="small" style={{ minWidth: 150 }}>
-          <InputLabel>Asset</InputLabel>
-          <Select
-            value={selectedAsset}
-            label="Asset"
-            onChange={(e) => setSelectedAsset(e.target.value)}
-            disabled={assetList.length === 0}
-          >
-            <MenuItem value="">All</MenuItem>
-            {assetList.map((asset) => (
-              <MenuItem key={asset} value={asset}>
-                {asset}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <DatePicker
-          selected={startDate}
-          onChange={(date) => setStartDate(date)}
-          selectsStart
-          startDate={startDate}
-          endDate={endDate}
-          placeholderText="Start Date"
-          className="date-picker"
-        />
-        <DatePicker
-          selected={endDate}
-          onChange={(date) => setEndDate(date)}
-          selectsEnd
-          startDate={startDate}
-          endDate={endDate}
-          minDate={startDate}
-          placeholderText="End Date"
-          className="date-picker"
-        />
-      </div>
-
       <div className="charts-grid">
         <div className="chart-wrapper">
           <div className="chart-header">
             <h2>Average Waiting Time by Asset</h2>
+            <FormControl
+              size="small"
+              style={{ minWidth: 120 }}
+              disabled={assetList.length === 0}
+            >
+              <InputLabel>Asset</InputLabel>
+              <Select
+                value={selectedAsset}
+                label="Asset"
+                onChange={(e) => setSelectedAsset(e.target.value)}
+              >
+                <MenuItem value="">All</MenuItem>
+                {assetList.map((asset) => (
+                  <MenuItem key={asset} value={asset}>
+                    {asset}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </div>
           {barChartData.length > 0 ? (
             <ResponsiveContainer width="100%" height={400}>
@@ -181,7 +151,6 @@ const Dashboard = () => {
           )}
         </div>
 
-        {/* --- Correct placement for the Map --- */}
         <div className="chart-wrapper full-width">
           <h2>Live Asset Locations</h2>
           <div style={{ height: "400px", width: "100%" }}>

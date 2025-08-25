@@ -1,22 +1,23 @@
+.dashboard-container {
+    padding: 20px;
+    font-family: sans-serif;
+    background-color: #f4f6f8;
+}
+
 .charts-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
     gap: 20px;
 }
 
-.dashboard-container {
-    padding: 20px;
-    font-family: sans-serif;
-}
-
 .chart-wrapper {
-    margin-top: 40px;
+    background-color: white;
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid #e0e0e0;
     border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Add this new rule */
 .chart-header {
     display: flex;
     justify-content: space-between;
@@ -26,9 +27,17 @@
 
 .chart-header h2 {
     margin: 0;
+    font-size: 1.1rem;
 }
 
-/* Add this new rule */
 .full-width {
     grid-column: 1 / -1;
+}
+
+.app-footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    color: #777;
+    border-top: 1px solid #eee;
 }

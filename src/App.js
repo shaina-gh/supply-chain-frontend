@@ -1,6 +1,7 @@
 import "./App.css";
 import Dashboard from "./components/Dashboard";
-import "leaflet/dist/leaflet.css";
+import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
+
 function App() {
   return (
     <div className="App">

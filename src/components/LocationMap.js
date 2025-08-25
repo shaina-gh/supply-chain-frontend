@@ -7,9 +7,8 @@ const LocationMap = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/locations")
+      .get("https://supply-chain-backend-mf8h.onrender.com/api/locations") // Use your live Render URL
       .then((response) => {
-        // Filter out any rows that don't have valid coordinates
         const validLocations = response.data.filter(
           (loc) => loc.latitude && loc.longitude
         );
@@ -18,11 +17,10 @@ const LocationMap = () => {
       .catch((error) => console.error("Error fetching location data:", error));
   }, []);
 
-  // Set a default center for the map
   const mapCenter =
     locations.length > 0
       ? [locations[0].latitude, locations[0].longitude]
-      : [20.5937, 78.9629]; // Default to India
+      : [20.5937, 78.9629];
 
   return (
     <MapContainer
