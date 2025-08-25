@@ -11,7 +11,7 @@ const KpiCards = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/kpi-summary")
+      .get("https://supply-chain-backend-mf8h.onrender.com/api/kpi-summary")
       .then((response) => setStats(response.data))
       .catch((error) => console.error("Error fetching KPI data:", error));
   }, []);
