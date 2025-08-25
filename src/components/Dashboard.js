@@ -18,7 +18,7 @@ import LocationMap from "./LocationMap";
 import "./Dashboard.css";
 
 const COLORS = ["#FFBB28", "#00C49F", "#0088FE", "#FF8042"];
-const RENDER_API_URL = "https://supply-chain-backend-mf8h.onrender.com"; // <-- REPLACE WITH YOUR RENDER URL
+const RENDER_API_URL = "https://supply-chain-backend-mf8h.onrender.com";
 
 const Dashboard = () => {
   const [barChartData, setBarChartData] = useState([]);
@@ -49,7 +49,8 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchBarData = async () => {
       const assetFilter = selectedAsset || "All";
-      const endpoint = `$https://supply-chain-backend-mf8h.onrender.com/api/logistics?asset=${assetFilter}`;
+      // --- FIX: Use the RENDER_API_URL variable correctly ---
+      const endpoint = `${RENDER_API_URL}/api/logistics?asset=${assetFilter}`;
       try {
         const response = await axios.get(endpoint);
         setBarChartData(response.data);
