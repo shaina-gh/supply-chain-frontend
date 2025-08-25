@@ -1,0 +1,34 @@
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 20px;
+}
+
+.dashboard-container {
+    padding: 20px;
+    font-family: sans-serif;
+}
+
+.chart-wrapper {
+    margin-top: 40px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* Add this new rule */
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.chart-header h2 {
+    margin: 0;
+}
+
+/* Add this new rule */
+.full-width {
+    grid-column: 1 / -1;
+}
