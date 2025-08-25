@@ -2,7 +2,7 @@
 
 This is the frontend for a full-stack Business Intelligence dashboard built with React. It provides an interactive interface for supply chain managers to analyze logistics data, identify inefficiencies, and make data-driven decisions.
 
-**Live Demo**: [https://your-netlify-site-name.netlify.app](https://your-netlify-site-name.netlify.app)  *(<-- Add your live Netlify URL here!)*
+**Live Demo**: supplychainshaina.netlify.app/ 
 
 ---
 
